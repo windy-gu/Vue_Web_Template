@@ -5,14 +5,29 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex'
+import { getUserInfo } from '@/api/user'
 
 export default {
-  name: 'Dashboard',
-  computed: {
-    ...mapGetters([
-      'name'
-    ])
+  data() {
+    return {
+      name: ''
+      }
+    },
+  mounted() {
+    this.queryUserInfo()
+  },
+  methods: {
+    queryUserInfo() {
+      var user = sessionStorage.getItem('user')
+      getUserInfo({username:user}).then(res => {
+        if (res.rspInf === 'success') {
+          sessionStorage.setItem('avatar', res.avatar)
+          this.name = user
+        } else {
+          this.$message.error('查询用户失败')
+        }
+      })
+    }
   }
 }
 </script>
