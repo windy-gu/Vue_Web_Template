@@ -36,13 +36,6 @@ export const constantRoutes = [
     component: () => import('@/views/login/index'),
     hidden: true
   },
-
-  {
-    path: '/404',
-    component: () => import('@/views/404'),
-    hidden: true
-  },
-
   {
     path: '/',
     component: Layout,
@@ -53,6 +46,32 @@ export const constantRoutes = [
       component: () => import('@/views/dashboard/index'),
       meta: { title: 'Dashboard', icon: 'dashboard' }
     }]
+  },
+  {
+    path: '/books',
+    component: Layout,
+    redirect: '/book/author',
+    name: 'Book',
+    meta: { title: '图书管理', icon: 'el-icon-s-help' },
+    children: [
+      {
+        path: 'author',
+        name: 'author',
+        component: () => import('@/views/author/index'),
+        meta: { title: '作者信息', icon: 'table' }
+      },
+      {
+        path: 'book',
+        name: 'book',
+        component: () => import('@/views/book/index'),
+        meta: { title: '书籍信息', icon: 'table' }
+      }
+    ]
+  },
+  {
+    path: '/404',
+    component: () => import('@/views/404'),
+    hidden: true
   },
 
   {

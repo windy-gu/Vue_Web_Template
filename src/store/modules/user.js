@@ -1,12 +1,15 @@
 import { login, logout, getInfo } from '@/api/user'
 import { getToken, setToken, removeToken } from '@/utils/auth'
 import { resetRouter } from '@/router'
+import { DongtRouter } from '@/api/index'
+import { error } from 'autoprefixer/lib/utils'
 
 const getDefaultState = () => {
   return {
     token: getToken(),
     name: '',
-    avatar: ''
+    avatar: '',
+    menus: ''
   }
 }
 
@@ -24,6 +27,9 @@ const mutations = {
   },
   SET_AVATAR: (state, avatar) => {
     state.avatar = avatar
+  },
+  SET_MENUS: (state, menus) => {
+    state.menus = menus
   }
 }
 
@@ -33,9 +39,11 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        const { data } = response
-        commit('SET_TOKEN', data.token)
-        setToken(data.token)
+        // const { data } = response
+        commit('SET_TOKEN', response.token)
+        commit('SET_NAME', response.name)
+        commit('SET_AVATAR', response.avatar)
+        setToken(response.token)
         resolve()
       }).catch(error => {
         reject(error)
@@ -63,19 +71,42 @@ const actions = {
       })
     })
   },
-
-  // user logout
-  logout({ commit, state }) {
+  getAntRouter({ commit, state }) {
     return new Promise((resolve, reject) => {
-      logout(state.token).then(() => {
-        removeToken() // must remove  token  first
-        resetRouter()
-        commit('RESET_STATE')
-        resolve()
+      DongtRouter().then(response => {
+        const menus = response.data
+        // 如果需要404 页面，请在此处添加
+        menus.push({
+          path: '/404',
+          component: '404',
+          hidden: true
+        }, {
+          path: '*',
+          component: '/404',
+          hidden: true
+        })
+        commit('SET_MENUS', menus) // 触发vuex SET_MENUS 保存路由表到vuex
+        response()
       }).catch(error => {
         reject(error)
       })
     })
+  },
+  // user logout
+  logout({ commit, state }) {
+    // return new Promise((resolve, reject) => {
+    //   logout(state.token).then(() => {
+    //     removeToken() // must remove  token  first
+    //     resetRouter()
+    //     commit('RESET_STATE')
+    //     resolve()
+    //   }).catch(error => {
+    //     reject(error)
+    //   })
+    // })
+    removeToken() // must remove  token  first
+    resetRouter()
+    commit('RESET_STATE')
   },
 
   // remove token
