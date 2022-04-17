@@ -18,6 +18,14 @@ export function getAuthorInfo() {
   })
 }
 
+export function getAuthorInfoByPagination(data) {
+  return request({
+    url: "/author/list",
+    method: 'post',
+    data
+  })
+}
+
 // 通过作者ID获取作者信息
 export function getAuthorInfoById(id) {
   return request({

@@ -51,14 +51,29 @@
       </span>
     </el-dialog>
     <!--删除 二次确认弹窗-->
-
+    <br>
+    <div class="block" type="text-align: right;"  >
+      <el-pagination
+          @size-change="handleSizeChange"
+          @current-change="handleCurrentChange"
+          :current-page="pageNum"
+          :page-sizes="[5, 10, 50, 100]"
+          :page-size="pageSize"
+          layout="total, sizes, prev, pager, next, jumper"
+          :total="totalSize"
+          style="text-align:right"
+          >
+      </el-pagination>
+    </div>
   </div>
+
 </template>
 
 <script>
 import {
   createAuthorInfo,
   getAuthorInfo,
+  getAuthorInfoByPagination,
   // getAuthorInfoById,
   UpdateAuthorInfoById,
   DeleteAuthorInfoById,
@@ -70,8 +85,12 @@ export default {
     return {
       tableData: [],
       title: '',
-
       centerDialogVisible: false,
+
+      pageNum: 1,
+      pageSize:5,
+      totalSize: '',
+
       form: {
         first_name: '',
         last_name: ''
@@ -79,7 +98,7 @@ export default {
     }
   },
   mounted() {
-    this.getAuthorList()
+    this.selectAuthorInfoByPagination()
   },
   methods: {
     handleAdd() {
@@ -135,7 +154,7 @@ export default {
       createAuthorInfo(this.form).then(res => {
         if (res.rspInf === 'success') {
           this.$message.success('添加成功')
-          this.getAuthorList()
+          this.selectAuthorInfoByPagination()
         } else {
           this.$message.error('添加失败')
         }
@@ -171,7 +190,7 @@ export default {
       UpdateAuthorInfoById(this.form).then(res => {
         if (res.rspInf === 'success') {
           this.$message.success('更新成功')
-          this.getAuthorList()
+          this.selectAuthorInfoByPagination()
         } else {
           this.$message.error('更新失败')
         }
@@ -187,21 +206,20 @@ export default {
       DeleteAuthorInfoById(auhtorId).then(res => {
         if (res.rspInf === 'success') {
           this.$message.success('删除成功')
-          this.getAuthorList()
+          this.selectAuthorInfoByPagination()
         } else {
           this.$message.error('删除失败')
-          this.getAuthorList()
+          this.selectAuthorInfoByPagination()
         }
       })
         .catch(err => {
           this.$message.error('删除失败，catch')
-          this.getAuthorList()
+          this.selectAuthorInfoByPagination()
         })
     },
     // 获取用户信息
     getAuthorList() {
-      getAuthorInfo()
-        .then(res => {
+      getAuthorInfo().then(res => {
           if (res.rspInf === 'success') {
             console.log(res.responseData)
             this.tableData = res.responseData
@@ -213,8 +231,31 @@ export default {
           this.$message.error('服务端异常，请联系管理员解决。')
         })
     },
+    selectAuthorInfoByPagination() {
+      getAuthorInfoByPagination({pageSize:this.pageSize,pageNum:this.pageNum}).then(res => {
+        if (res.rspInf === 'success') {
+          console.log(res.list)
+          this.pageSize = res.pageSize
+          this.pageNum = res.pageNum
+          this.totalSize = res.total
+          this.tableData = res.list
+        } else {
+          this.$message.error('获取信息失败')
+        }
+      })
+    },
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.selectAuthorInfoByPagination()
+    },
+    handleCurrentChange (val) {
+      console.log(`当前页: ${val}`);
+      this.pageNum = val;
+      this.selectAuthorInfoByPagination();
+    },
     reSet() {
-      this.getAuthorList()
+      this.selectAuthorInfoByPagination()
     },
     handleEdit(index, row) {
       this.centerDialogVisible = true

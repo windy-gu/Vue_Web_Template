@@ -44,6 +44,7 @@ const actions = {
         commit('SET_NAME', response.name)
         commit('SET_AVATAR', response.avatar)
         sessionStorage.setItem('user', response.name)  // 登录后，将user设置为sessionStorage变量
+        sessionStorage.setItem('avatar', response.avatar)  // 登录后，将user设置为sessionStorage变量
         setToken(response.token)
         resolve()
       }).catch(error => {
@@ -108,6 +109,7 @@ const actions = {
     removeToken() // must remove  token  first
     resetRouter()
     sessionStorage.removeItem('user') // 退出登录时，清除user变量
+    sessionStorage.removeItem('avatar') // 退出登录时，清除user变量
     commit('RESET_STATE')
   },
 
