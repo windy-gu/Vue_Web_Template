@@ -57,7 +57,7 @@
           @size-change="handleSizeChange"
           @current-change="handleCurrentChange"
           :current-page="pageNum"
-          :page-sizes="[5, 10, 50, 100]"
+          :page-sizes="[10, 20, 50]"
           :page-size="pageSize"
           layout="total, sizes, prev, pager, next, jumper"
           :total="totalSize"
@@ -88,7 +88,7 @@ export default {
       centerDialogVisible: false,
 
       pageNum: 1,
-      pageSize:5,
+      pageSize: 10,
       totalSize: '',
 
       form: {
@@ -234,11 +234,16 @@ export default {
     selectAuthorInfoByPagination() {
       getAuthorInfoByPagination({pageSize:this.pageSize,pageNum:this.pageNum}).then(res => {
         if (res.rspInf === 'success') {
-          console.log(res.list)
-          this.pageSize = res.pageSize
-          this.pageNum = res.pageNum
-          this.totalSize = res.total
-          this.tableData = res.list
+          console.log(res.responseData)
+            if (res.responseData === null) {
+              this.tableData = res.responseData
+            } else {
+              this.pageSize = res.pageSize
+              this.pageNum = res.pageNum
+              this.totalSize = res.total
+              this.tableData = res.responseData
+            }
+
         } else {
           this.$message.error('获取信息失败')
         }
@@ -247,6 +252,7 @@ export default {
     handleSizeChange(val) {
       console.log(`每页 ${val} 条`);
       this.pageSize = val;
+      this.pageNum = 1;
       this.selectAuthorInfoByPagination()
     },
     handleCurrentChange (val) {
