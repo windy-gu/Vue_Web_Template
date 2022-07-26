@@ -11,12 +11,12 @@
     <!--作者信息列表 -->
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="180"></el-table-column>
-      <el-table-column prop="first_name" label="姓名"></el-table-column>
-      <el-table-column prop="last_name" label="笔名"></el-table-column>
+      <el-table-column prop="name" label="姓名"></el-table-column>
+      <el-table-column prop="pseudonym" label="笔名"></el-table-column>
       <el-table-column label="操作" width="180" align="center">
         <template slot-scope="scope">
-          <el-button size="mini" @click="handleEdit(scope.$index, scope.row)">编辑</el-button>
-          <el-button size="mini" type="danger" @click="open(scope.$index, scope.row)">删除</el-button>
+          <el-button size="mini" @click="edit_author(scope.$index, scope.row)">编辑</el-button>
+          <el-button size="mini" type="danger" @click="delete_author(scope.$index, scope.row)">删除</el-button>
         </template>
       </el-table-column>
       <template #empty>
@@ -28,21 +28,21 @@
     <el-dialog :title="title" :visible.sync="centerDialogVisible" width="50%" center>
       <el-form ref="form" :model="form" label-width="80px">
         <el-form-item
-          prop="first_name"
+          prop="name"
           label="作者姓名"
           :rules="[
             { required: true, message: '请输入作者姓名', trigger: 'change' }
           ]"
         >
-          <el-input v-model="form.first_name"></el-input>
+          <el-input v-model="form.name"></el-input>
         </el-form-item>
         <el-form-item
-          prop="last_name"
+          prop="pseudonym"
           label="作者笔名"
           :rules="[{ required: true, message: '请输入作者笔名', trigger: 'change' }
           ]"
         >
-          <el-input v-model="form.last_name"></el-input>
+          <el-input v-model="form.pseudonym"></el-input>
         </el-form-item>
       </el-form>
       <span slot="footer" class="dialog-footer">
@@ -75,8 +75,8 @@ import {
   getAuthorInfo,
   getAuthorInfoByPagination,
   // getAuthorInfoById,
-  UpdateAuthorInfoById,
-  DeleteAuthorInfoById,
+  UpdateAuthor,
+  DeleteAuthor,
   getAuthorListById
 } from '@/api/author'
 
@@ -92,9 +92,10 @@ export default {
       totalSize: '',
 
       form: {
-        first_name: '',
-        last_name: ''
+        name: '',
+        pseudonym: ''
       }
+
     }
   },
   mounted() {
@@ -113,8 +114,8 @@ export default {
     // 重置表单数据
     reset() {
       this.form = {
-        first_name: '',
-        last_name: ''
+        name: '',
+        pseudonym: ''
       }
     },
     // 弹窗中的确定按钮,调用接口保存作者信息
@@ -135,7 +136,7 @@ export default {
       })
     },
     // 删除二次确认弹窗
-    open(index, row) {
+    delete_author(index, row) {
       this.$confirm('此操作将删除该内容, 是否继续?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -187,7 +188,7 @@ export default {
     // 用户信息更新
     handleUpdate() {
       console.log(this.form)
-      UpdateAuthorInfoById(this.form).then(res => {
+      UpdateAuthor(this.form).then(res => {
         if (res.rspInf === 'success') {
           this.$message.success('更新成功')
           this.selectAuthorInfoByPagination()
@@ -201,9 +202,9 @@ export default {
     },
 
     // 删除用户信息
-    handleDelete(index, row) {
-      const auhtorId = row.id
-      DeleteAuthorInfoById(auhtorId).then(res => {
+    handleDelete() {
+      console.log(this.form)
+      DeleteAuthor(this.form).then(res => {
         if (res.rspInf === 'success') {
           this.$message.success('删除成功')
           this.selectAuthorInfoByPagination()
@@ -263,7 +264,7 @@ export default {
     reSet() {
       this.selectAuthorInfoByPagination()
     },
-    handleEdit(index, row) {
+    edit_author(index, row) {
       this.centerDialogVisible = true
       this.title = '编辑作者信息'
       this.form = { ...row }

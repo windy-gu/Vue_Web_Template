@@ -43,18 +43,19 @@ export function getAuthorListById(id) {
 }
 
 // 更新作者信息
-export function UpdateAuthorInfoById(data) {
+export function UpdateAuthor(data) {
   return request({
-    url: "/author/update/" + data.id,
-    method: 'put',
+    url: "/author/update",
+    method: 'post',
     data
   })
 }
 
 // 删除作者信息接口
-export function DeleteAuthorInfoById(id) {
+export function DeleteAuthor(data) {
   return request({
-    url: "/author/delete/" + id,
-    method: 'delete'
+    url: "/author/delete",
+    method: 'post',
+    data
   })
 }
