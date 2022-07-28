@@ -10,7 +10,7 @@ export function login(data) {
 
 export function getUserInfo(data) {
   return request({
-    url: 'user/user/info',
+    url: 'user/userinfo',
     method: 'post',
     data
   })

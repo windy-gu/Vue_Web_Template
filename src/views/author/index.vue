@@ -169,7 +169,7 @@ export default {
       // debugger
       console.log(searchKey)
       if (searchKey.length >= 1) {
-        getAuthorListById(searchKey).then(res => {
+        getAuthorListById({id:searchKey}).then(res => {
           if (res.rspInf === 'success') {
             this.$message.success('查询成功')
             console.log(res.responseData)

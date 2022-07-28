@@ -35,10 +35,11 @@ export function getAuthorInfoById(id) {
 }
 
 // 通过作者ID获取作者信息
-export function getAuthorListById(id) {
+export function getAuthorListById(data) {
   return request({
-    url: "/author/list/" + id,
-    method: 'get'
+    url: "/author/list" ,
+    method: 'post',
+    data
   })
 }
 
