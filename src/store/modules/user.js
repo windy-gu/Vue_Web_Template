@@ -88,9 +88,9 @@ const actions = {
           hidden: true
         })
         commit('SET_MENUS', menus) // 触发vuex SET_MENUS 保存路由表到vuex
-        response()
+        resolve()
       }).catch(error => {
-        reject(error)
+          reject(error)
       })
     })
   },

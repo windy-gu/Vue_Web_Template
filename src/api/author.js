@@ -26,11 +26,12 @@ export function getAuthorInfoByPagination(data) {
   })
 }
 
-// 通过作者ID获取作者信息
-export function getAuthorInfoById(id) {
+// 通过笔名、姓名 模糊查询
+export function selectByLike(data) {
   return request({
-    url: "/author/detail/" + id,
-    method: 'get'
+    url: "/author/list/like",
+    method: 'post',
+    data
   })
 }
 

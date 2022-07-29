@@ -8,6 +8,33 @@
       <toolbar @search="getAuthorListByID" @reset="reSet" @add="handleAdd" ></toolbar>
     </el-row>
     <br/>
+<!--模糊查询-->
+    <el-form ref="form" :model="form" label-width="40px">
+      <el-form-item label="姓名">
+        <el-input
+            v-model="form.name"
+            placeholder="请输入姓名"
+            clearable
+            maxlength="10"
+            show-word-limit
+            style="width: 200px"
+        ></el-input>
+      </el-form-item>
+      <el-form-item label="笔名">
+        <el-input
+            v-model="form.pseudonym"
+            placeholder="请输入笔名"
+            clearable
+            maxlength="10"
+            show-word-limit
+            style="width: 200px"
+        ></el-input>
+      </el-form-item>
+      <el-row>
+        <el-button @click="selectByLike">查询</el-button>
+      </el-row>
+    </el-form>
+    <br/>
     <!--作者信息列表 -->
     <el-table :data="tableData" border style="width: 100%">
       <el-table-column prop="id" label="序号" width="180"></el-table-column>
@@ -74,7 +101,7 @@ import {
   createAuthorInfo,
   getAuthorInfo,
   getAuthorInfoByPagination,
-  // getAuthorInfoById,
+  selectByLike,
   UpdateAuthor,
   DeleteAuthor,
   getAuthorListById
@@ -163,6 +190,18 @@ export default {
         .catch(err => {
           this.$message.error('服务端异常，添加失败。')
         })
+    },
+    // 通过姓名、笔名进行模糊查询
+    selectByLike() {
+      selectByLike({name:this.form.name,pseudonym:this.form.pseudonym}).then(res => {
+        if (res.rspInf === 'success') {
+          this.$message.success('查询成功')
+          this.tableData = res.responseData
+        } else {
+          this.$message.error('查询失败')
+
+        }
+      })
     },
     // 根据用户ID进行查询
     getAuthorListByID(searchKey) {

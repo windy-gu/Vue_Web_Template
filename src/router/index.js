@@ -64,7 +64,7 @@ export const constantRoutes = [
         path: 'book',
         name: 'book',
         component: () => import('@/views/book/index'),
-        meta: { title: '书籍信息', icon: 'table' }
+        meta: { title: '验证码', icon: 'table' }
       }
     ]
   },
