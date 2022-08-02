@@ -65,6 +65,12 @@ export const constantRoutes = [
         name: 'book',
         component: () => import('@/views/book/index'),
         meta: { title: '验证码', icon: 'table' }
+      },
+      {
+        path: 'url_api',
+        name: '接口请求',
+        component: () => import('@/views/url_api/index'),
+        meta: { title: '接口请求', icon: 'table' }
       }
     ]
   },
