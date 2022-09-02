@@ -31,15 +31,21 @@
                 <el-button @click="api_execute">执行</el-button>
 
               </el-row>
+              <el-tabs v-model="activeName" @tab-click="handleClick">
+                <el-tab-pane label="Response Body" name="response_body">
+                  <json-view :data="form.res_body"/>
+                </el-tab-pane>
+                <el-tab-pane label="Response Headers" name="response_headers">
+                  <json-view :data="form.res_header"/>
+                </el-tab-pane>
+<!--                <el-tab-pane label="Request Body" name="request_body">-->
+<!--                  <json-view :data="form.req_body"/>-->
+<!--                </el-tab-pane>-->
+<!--                <el-tab-pane label="Request Headers" name="request_headers">-->
+<!--                  <json-view :data="form.req_header"/>-->
+<!--                </el-tab-pane>-->
+              </el-tabs>
 
-              <el-form-item label="响应body">
-                <!--        <el-input type="textarea" v-model="form.jsonData"></el-input>-->
-                <json-viewer :value="form.jsonData"></json-viewer>
-              </el-form-item>
-              <el-form-item label="响应header">
-                <json-viewer :value="form.res_header"></json-viewer>
-                <!--        <el-input type="textarea" v-model="form.res_header"></el-input>-->
-              </el-form-item>
             </el-form>
           </el-main>
 
@@ -56,6 +62,7 @@
 <script>
 
 import {apiExecute} from "@/api/url_api";
+import jsonView from 'vue-json-views'
 import Vue from "vue";
 
 
@@ -66,12 +73,18 @@ export default {
         url: 'http://127.0.0.1:5001/api/author/list/like',
         body:'{"name":"杨振东"}',
         header:'',
-        jsonData:'',
-        res_header:''
-      }
+        res_body:{},
+        res_header: {}
+        // req_body:{},
+        // req_header: {}
+      },
+      activeName: 'response_body'
     }
   },
   methods: {
+    handleClick(tab, event) {
+      // console.log(tab, event);
+    },
     onSubmit() {
     },
     api_execute() {
@@ -79,9 +92,10 @@ export default {
         console.log(response)
         const res = response.data
         if (res.rspInf === 'success') {
-          this.form.jsonData = res
-
+          this.form.res_body = res
           this.form.res_header = response.headers
+          // this.form.req_body = response.config.data
+          // this.form.req_header = response.config.headers
 
           this.$message.success('api请求成功')
         } else {
@@ -90,17 +104,9 @@ export default {
       })
 
     }
-    // api_execute() {
-    //   Vue.http.post(this.form.url, this.form.body).then(res => {
-    //     if (res.rspInf === 'success') {
-    //       this.form.res_body = res.responseData
-    //       this.$message.success('api请求成功')
-    //     } else {
-    //       this.$message.error('api请求失败')
-    //     }
-    //   })
-    //
-    // }
+  },
+  components: {
+    jsonView
   }
 }
 </script>
