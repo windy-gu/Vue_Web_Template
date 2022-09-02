@@ -12,7 +12,7 @@
     <el-form ref="form" :model="form" label-width="40px">
       <el-form-item label="姓名">
         <el-input
-            v-model="form.name"
+            v-model="form.search_name"
             placeholder="请输入姓名"
             clearable
             maxlength="10"
@@ -22,7 +22,7 @@
       </el-form-item>
       <el-form-item label="笔名">
         <el-input
-            v-model="form.pseudonym"
+            v-model="form.search_pseudonym"
             placeholder="请输入笔名"
             clearable
             maxlength="10"
@@ -120,7 +120,9 @@ export default {
 
       form: {
         name: '',
-        pseudonym: ''
+        pseudonym: '',
+        search_name: '',
+        search_pseudonym: ''
       }
 
     }
@@ -179,7 +181,8 @@ export default {
     },
     // 添加用户
     handleCreate() {
-      createAuthorInfo(this.form).then(res => {
+      createAuthorInfo(this.form).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('添加成功')
           this.selectAuthorInfoByPagination()
@@ -193,7 +196,8 @@ export default {
     },
     // 通过姓名、笔名进行模糊查询
     selectByLike() {
-      selectByLike({name:this.form.name,pseudonym:this.form.pseudonym}).then(res => {
+      selectByLike({name:this.form.search_name,pseudonym:this.form.search_pseudonym}).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('查询成功')
           this.tableData = res.responseData
@@ -206,9 +210,10 @@ export default {
     // 根据用户ID进行查询
     getAuthorListByID(searchKey) {
       // debugger
-      console.log(searchKey)
+      console.log(searchKey.length)
       if (searchKey.length >= 1) {
-        getAuthorListById({id:searchKey}).then(res => {
+        getAuthorListById({id:searchKey}).then(response => {
+          const res = response.data
           if (res.rspInf === 'success') {
             this.$message.success('查询成功')
             console.log(res.responseData)
@@ -221,13 +226,15 @@ export default {
             this.$message.error('服务端异常，查询失败。')
           })
       } else {
+        console.log('into test')
         this.getAuthorList()
       }
     },
     // 用户信息更新
     handleUpdate() {
       console.log(this.form)
-      UpdateAuthor(this.form).then(res => {
+      UpdateAuthor(this.form).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('更新成功')
           this.selectAuthorInfoByPagination()
@@ -243,7 +250,8 @@ export default {
     // 删除用户信息
     handleDelete() {
       console.log(this.form)
-      DeleteAuthor(this.form).then(res => {
+      DeleteAuthor(this.form).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('删除成功')
           this.selectAuthorInfoByPagination()
@@ -259,7 +267,8 @@ export default {
     },
     // 获取用户信息
     getAuthorList() {
-      getAuthorInfo().then(res => {
+      getAuthorInfo().then(response => {
+        const res = response.data
           if (res.rspInf === 'success') {
             console.log(res.responseData)
             this.tableData = res.responseData
@@ -272,7 +281,8 @@ export default {
         })
     },
     selectAuthorInfoByPagination() {
-      getAuthorInfoByPagination({pageSize:this.pageSize,pageNum:this.pageNum}).then(res => {
+      getAuthorInfoByPagination({pageSize:this.pageSize,pageNum:this.pageNum}).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           console.log(res.responseData)
             if (res.responseData === null) {

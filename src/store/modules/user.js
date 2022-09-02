@@ -39,13 +39,13 @@ const actions = {
     const { username, password } = userInfo
     return new Promise((resolve, reject) => {
       login({ username: username.trim(), password: password }).then(response => {
-        // const { data } = response
-        commit('SET_TOKEN', response.token)
-        commit('SET_NAME', response.name)
-        commit('SET_AVATAR', response.avatar)
-        sessionStorage.setItem('user', response.name)  // 登录后，将user设置为sessionStorage变量
-        sessionStorage.setItem('avatar', response.avatar)  // 登录后，将user设置为sessionStorage变量
-        setToken(response.token)
+        const  data  = response.data
+        commit('SET_TOKEN', data.token)
+        commit('SET_NAME', data.name)
+        commit('SET_AVATAR', data.avatar)
+        sessionStorage.setItem('user', data.name)  // 登录后，将user设置为sessionStorage变量
+        sessionStorage.setItem('avatar', data.avatar)  // 登录后，将user设置为sessionStorage变量
+        setToken(data.token)
         resolve()
       }).catch(error => {
         reject(error)

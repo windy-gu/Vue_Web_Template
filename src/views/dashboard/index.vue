@@ -19,7 +19,8 @@ export default {
   methods: {
     queryUserInfo() {
       var user = sessionStorage.getItem('user')
-      getUserInfo({username:user}).then(res => {
+      getUserInfo({username:user}).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           sessionStorage.setItem('avatar', res.avatar)
           this.name = user

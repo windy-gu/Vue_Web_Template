@@ -37,7 +37,8 @@ export default {
     onSubmit() {
     },
     sendSMSCode() {
-      sendSmsCode({mobile: this.form.mobile}).then(res => {
+      sendSmsCode({mobile: this.form.mobile}).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('发送验证码成功')
         } else {
@@ -47,7 +48,8 @@ export default {
 
     },
     checkSMSCode() {
-      checkSmsCode({mobile: this.form.mobile}).then(res => {
+      checkSmsCode({mobile: this.form.mobile}).then(response => {
+        const res = response.data
         if (res.rspInf === 'success') {
           this.$message.success('验证码：' + res.verify_code)
         } else {

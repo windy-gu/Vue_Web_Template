@@ -75,14 +75,14 @@ export default {
     onSubmit() {
     },
     api_execute() {
-      apiExecute({url: this.form.url, body:this.form.body}).then(res => {
+      apiExecute({url: this.form.url, body:this.form.body}).then(response => {
+        console.log(response)
+        const res = response.data
         if (res.rspInf === 'success') {
           this.form.jsonData = res
 
-          this.form.res_header = res.headers
-          console.log('----------')
-          console.log(res.headers)
-          console.log('----------')
+          this.form.res_header = response.headers
+
           this.$message.success('api请求成功')
         } else {
           this.$message.error('api请求失败')
