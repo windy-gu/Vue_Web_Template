@@ -171,7 +171,8 @@ export default {
         cancelButtonText: '取消',
         type: 'warning'
       }).then(() => {
-        this.handleDelete(index, row)
+        this.form = { ...row }
+        this.handleDelete(this.form)
       }).catch(() => {
         this.$message({
           type: 'info',
@@ -194,6 +195,7 @@ export default {
           this.$message.error('服务端异常，添加失败。')
         })
     },
+
     // 通过姓名、笔名进行模糊查询
     selectByLike() {
       selectByLike({name:this.form.search_name,pseudonym:this.form.search_pseudonym}).then(response => {
@@ -207,7 +209,7 @@ export default {
         }
       })
     },
-    // 根据用户ID进行查询
+    // 根据用户ID进行查询，若未输入则直接通过分页控件的方式去查询
     getAuthorListByID(searchKey) {
       // debugger
       console.log(searchKey.length)
@@ -216,7 +218,6 @@ export default {
           const res = response.data
           if (res.rspInf === 'success') {
             this.$message.success('查询成功')
-            console.log(res.responseData)
             this.tableData = res.responseData
           } else {
             this.$message.error('查询失败')
@@ -226,8 +227,7 @@ export default {
             this.$message.error('服务端异常，查询失败。')
           })
       } else {
-        console.log('into test')
-        this.getAuthorList()
+        this.selectAuthorInfoByPagination()
       }
     },
     // 用户信息更新
@@ -249,7 +249,6 @@ export default {
 
     // 删除用户信息
     handleDelete() {
-      console.log(this.form)
       DeleteAuthor(this.form).then(response => {
         const res = response.data
         if (res.rspInf === 'success') {
